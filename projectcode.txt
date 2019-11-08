@@ -1,0 +1,182 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <conio.h>
+#include <string.h>
+struct dict
+{
+  struct dict *left,*right;
+  char word[10],meaning[20];
+}*Root=NULL;
+
+typedef struct dict dictionary;
+int check(char[],char[]);
+void insert(dictionary *);
+void Search();
+void view(dictionary *);
+
+int check(char a[],char b[]){
+     int i,j,c;
+     for(i=0,j=0 ; a[i]!='\0'&&b[j]!='\0' ; i++,j++){
+       if(a[i]>b[j]){
+	 c=1;
+	 break;
+       }
+	else if(b[j]>a[i]){
+	  c=-1;
+	  break;
+	}
+      else
+	 c=0;
+     }
+     if(c==1)
+       return 1;
+      else if(c==-1)
+	return -1;
+      else
+	return 0;
+}
+
+void Search(){
+  int flag=0;
+  char w[10];
+  dictionary *ptr;
+  ptr=Root;
+  printf("\n\n\n\n\n\n\n\n\n\n\t\t\tEnter word: ");
+  scanf("%s",w);
+  while(ptr!=NULL && flag==0){
+    if(check(w,ptr->word)>0)
+       ptr=ptr->right;
+    else if(check(w,ptr->word)<0)
+	  ptr=ptr->left;
+    else if(check(w,ptr->word)==0){
+       flag=1;
+       printf("\t\t\tMeaning: %s",ptr->meaning);
+    }
+
+    }
+    if(flag==0)
+      printf("\t\t\tWORD NOT FOUND");
+    sleep(3);
+    clrscr();
+
+}
+
+void insert(dictionary *temp){
+  int flag=0;
+  dictionary *ptr,*par;
+  ptr=Root;
+
+  if(Root==NULL)
+     Root=temp;
+  else
+  {
+     while(ptr!=NULL )
+     {
+       if(check(temp->word,ptr->word)>0)
+       {
+	 par=ptr;
+	 ptr=ptr->right;
+       }
+
+       else if(check(temp->word,ptr->word)<0)
+     {
+       par=ptr;
+       ptr=ptr->left;
+     }
+   }
+       if(flag==0 && ptr==NULL)
+       {
+
+	 if(check(par->word,temp->word)==1)
+	    par->left=temp;
+	 else if(check(par->word,temp->word)==-1)
+	    par->right=temp;
+       }
+
+     }
+
+}
+
+void view(dictionary *ptr){
+  if(Root==NULL)
+    printf("\n\n\n\n\n\n\n\n\n\n\t\t\t\tEMPTY DICTIONARY");
+
+  else if(ptr !=NULL)
+  {
+   view(ptr->left);
+   printf("\n\t\t\t\tWord: %s",ptr->word);
+   printf("\n\t\t\t\tMeaning: %s\n",ptr->meaning);
+
+   view(ptr->right);
+  }
+}
+void first()
+{
+  dictionary *t,*t1,*t2;
+  t=(dictionary*)malloc(sizeof(dictionary));
+  t->left=NULL;
+  t->right=NULL;
+  strcpy(t->word,"apple");
+  strcpy(t->meaning,"fruit");
+  insert(t);
+  t1=(dictionary*)malloc(sizeof(dictionary));
+  t1->left=NULL;
+  t1->right=NULL;
+  strcpy(t1->word,"dog");
+  strcpy(t1->meaning,"animal");
+  insert(t1);
+  t2=(dictionary*)malloc(sizeof(dictionary));
+  t2->left=NULL;
+  t2->right=NULL;
+  strcpy(t2->word,"rose");
+  strcpy(t2->meaning,"flower");
+  insert(t2);
+ // temp->left=NULL;
+ // temp->right=NULL;
+}
+
+int main()
+{
+  int ch;
+  dictionary *temp,*w1,*w2,*w3;
+  clrscr();
+
+  printf("\n\n\n\n\n\n\n\n\n\n\t\t\t********DICTIONARY********");
+  sleep(2);
+  clrscr();
+  first();
+  while(ch!=4){
+    printf("\n\n\n\n\n\n\t\t\t\t***MENU***\n\t\t\t\t1.Insert\n\t\t\t\t2.Search\n\t\t\t\t3.View\n\t\t\t\t4.Exit\n\n\t\t\tEnter your choice please... ");
+    scanf("%d",&ch);
+    clrscr();
+    switch (ch) {
+      case 2: Search();break;
+      case 1:
+	temp=(dictionary*)malloc(sizeof(dictionary));
+	temp->left=NULL;
+	temp->right=NULL;
+
+      printf("\n\n\n\n\n\n\n\t\t\tInsert word: ");
+      scanf("%s",temp->word);
+      printf("\t\t\tInsert meaning: ");
+      scanf("%s",temp->meaning);
+       insert(temp);
+       clrscr();
+       printf("\n\n\n\n\n\n\n\n\n\n\t\t\t\tWORD INSERTED !!!");
+       sleep(2);
+       clrscr();
+      break;
+      case 3:
+      view(Root);
+      sleep(5);
+      clrscr();
+      break;
+      case 4:
+      printf("\n\n\n\n\n\n\n\n\n\n\t\t\t\tBYE BYE !!!");
+      sleep(2);
+      exit(0);
+
+    }
+  }
+  return 0;
+}
